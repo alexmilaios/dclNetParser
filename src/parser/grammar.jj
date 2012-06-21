@@ -1,0 +1,335 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  JDK_VERSION = "1.5";
+  static = true;
+}
+
+PARSER_BEGIN(Parser)
+
+package parser;
+import rules.*;
+public class Parser{
+  
+}
+
+PARSER_END(Parser)
+
+SKIP :
+{
+  < "--" (["a" - "z"])* ("\n" | "\r" | "\r\n")>
+| " "
+| "\t"
+| "\n"
+}
+
+TOKEN :
+{
+  < EQUAL : "=">
+| < NEQUAL : "!=" >
+| < LESS : "<" >
+| < LESSEQUAL : "<=" >
+| < GREATER : ">" >
+| < GREATEREQUAL : ">=" >
+}
+
+TOKEN :
+{
+  < AFTER : "after" >
+| < FORGET : "forget" >
+| < NOT : "not" >
+| < IF : "if" >
+| < SEND : "send" >
+| < CONSTANT : (["a"-"z"]|"_")+ >
+| < VARIABLE : ["A"-"Z"] (["a"-"z"] | ["A"-"Z"] | <DIGIT> |"_")*>
+| < NUM : (<DIGIT>)+>
+| < #DIGIT : [ "0"-"9" ] >
+}
+
+Rule rule() :
+{Rule rule;}
+{
+	rule = add__tran_rule() "."
+	{
+		//rule.evaluate();
+		return rule;
+	}
+| 	rule = del_rule() "."
+	{
+		//rule.evaluate();
+		return rule;
+	}
+| 	rule = send_rule() "."
+	{
+		//rule.evaluate();
+		return rule;
+	}
+	 	
+| <EOF>
+	{
+		return null;	
+	}
+}
+
+Rule add__tran_rule() :
+{Predicate head;
+ Literal_list body;
+ boolean addrule = false;}
+{
+	head = predicate()
+	(
+	  < AFTER >	  {
+	 	addrule = true;   	  }
+	| <IF>  
+	)
+	body = literal_list()
+	{		if(addrule)			return new AddRule(head,body);
+		else
+			return new TransientRule(head,body);
+	}
+}
+
+Rule del_rule() :
+{
+  Predicate head;
+  Literal_list body;
+}
+{
+ 	<FORGET>
+ 	head = predicate()
+	<IF>
+	body = literal_list()
+	{
+	  return new DeleteRule(head,body);	}	
+}
+
+Rule send_rule() :
+{
+  Predicate head;
+  Literal_list body;
+}
+{
+	<SEND>
+	head = predicate()
+	< AFTER >
+	body = literal_list()
+	{
+	  return new SendRule(head,body);	}
+}
+
+Predicate predicate() :
+{
+  SimplePredicate predicate;
+  Predicate finalPredicate;
+}
+{
+	predicate = simple_predicate()
+	finalPredicate = transport_part(predicate)
+	{
+	  return finalPredicate;	}
+}
+
+SimplePredicate simple_predicate() :
+{Token name;
+ Term_List arguments;
+}
+{
+	name = < CONSTANT >
+	"(" arguments = argument_list() ")"
+    {
+      Constant cons = new Constant(name);
+      return new SimplePredicate(cons,arguments); 	}
+}
+
+Predicate transport_part(SimplePredicate simple) :
+{Identifier src_dest;}
+{
+	( "@" src_dest = identifier()
+	 {	   return new TransportPredicate(simple.getName(),simple.getTerms(),src_dest);	 }	)?
+	{
+	  return simple;	}
+}
+
+Term_List argument_list() :
+{
+ Term_List list;
+ Term term;
+}
+{
+	term = Term()
+	list = argument_list_tail()
+	{
+	  list.addElement(term);
+	  return list;	}
+}
+
+Term_List argument_list_tail() :
+{Term_List list;}
+{
+	("," list = argument_list()
+		{
+		  return list;		}
+	)?
+	{
+	  list = new Term_List();
+	  return list;
+	} 
+}
+
+Term Term() :
+{
+  Token output;
+  Term term;
+}
+{
+	(
+  	    output = <NUM>
+  	    {
+  	      return new Num(output);  	    }
+  	|	LOOKAHEAD(2)
+  		 term = identifier()
+  		 {
+  		   return term;  		 }
+  	//| 	function()
+  	|
+		{			Function fun;
+		}
+  		"#" fun = function()
+  		{
+  	  		return new AgrFunction(fun.getToken(),fun.getTerm_List());  		}
+	)
+}
+
+Function function() :
+{
+	Token name;
+	Term_List arguments;
+}
+{
+	name = <CONSTANT> "(" arguments = argument_list() ")"
+	{
+	  return new Function(name,arguments);	}
+}
+     
+Literal_list literal_list() :
+{
+  Literal_list list;
+  Literal literal;
+}
+{
+	literal = literal()
+	list = literal_list_tail()
+	{
+	  list.addElement(literal);
+	  return list;	}
+}
+
+Literal_list literal_list_tail() :
+{Literal_list list;}
+{
+ 	(","
+ 	  list = literal_list()
+ 	  {
+ 	    return list; 	  }
+ 	)?
+
+ 	 {
+ 	   return new Literal_list();  	 }
+}
+
+Literal literal() :
+{
+  Predicate predicate;
+  Expresion exp;
+}
+{
+  	LOOKAHEAD(2)
+	predicate = predicate()
+	{
+	  return new SimpleLiteral(predicate);	}
+| 	<NOT> predicate = predicate()
+	{
+	  return new NegativeLiteral(predicate);	}
+|	exp = expresion()
+	{		return exp;
+    }
+}
+
+Expresion expresion() :
+{
+  Term left, right;
+  Token operator;
+}
+{
+	left = operand()
+	operator = operator()
+	right = operand()
+	{
+	  return new Expresion(left,operator,right);	}
+}
+
+Term operand() :
+{
+  Token output;
+  Term iden;
+}
+{
+  output = <NUM>
+  {
+   return new Num(output);
+  }
+| iden = identifier()
+ {
+   return iden; }
+}
+
+Token operator() :
+{Token output;}
+{
+  
+ output = <EQUAL>
+ {
+   return output;
+ }
+| output = <NEQUAL>
+ {
+   return output;
+ }
+| LOOKAHEAD(2)
+  output = < LESS >
+  {
+   return output;
+  }
+| output = < LESSEQUAL >
+ {
+   return output;
+ }
+| output = < GREATER >
+ {
+   return output;
+ }
+| output = < GREATEREQUAL >
+ {
+   return output; }
+}
+
+Identifier identifier() :
+{
+  Identifier output;
+  Token token;
+}
+{  
+	(
+	   token = <VARIABLE>	    {
+	      output = new Variable(token);
+	      return output;
+		}
+	|  token = <CONSTANT>
+		{
+	      output = new Constant(token);
+	      return output;
+		}
+	)
+}
