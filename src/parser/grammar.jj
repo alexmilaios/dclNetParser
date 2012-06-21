@@ -192,7 +192,7 @@ Term Term() :
   		 term = identifier()
   		 {
   		   return term;  		 }
-  	//| 	function()
+  	| 	function()
   	|
 		{			Function fun;
 		}
