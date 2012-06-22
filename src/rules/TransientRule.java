@@ -23,7 +23,7 @@ public class TransientRule extends Rule{
 				output += aux.elementAt(i).evaluate()+"\n";
 			}
 			output += head.evaluate(false,true);
-			output += " :- node(Self_), time(Now_)";
+			output += " :- node(Self_),time(Now_)";
 			output += body.toString();
 			output += ".";
 		}

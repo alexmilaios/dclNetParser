@@ -18,7 +18,7 @@ public class DeleteRule extends Rule {
 		}
 		output += "forget_";
 		output += head.evaluate(false,true);
-		output += " :- node(Self_), time(Now_)";
+		output += " :- node(Self_),time(Now_)";
 		output += body.toString();
 		output += ".";
 		return output;

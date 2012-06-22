@@ -18,7 +18,7 @@ public class SendRule extends Rule {
 			output += aux.elementAt(i).evaluate()+"\n";
 		}
 		output += head.evaluate(true,true);
-		output += " :- node(Self_), time(Now_)";
+		output += " :- node(Self_),time(Now_)";
 		output += body.toString();
 		output += ".";
 		return output;

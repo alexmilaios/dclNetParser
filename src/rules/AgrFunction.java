@@ -15,7 +15,7 @@ public class AgrFunction extends Function {
 		Term_List fun_arg = this.getTerm_List();
 		auxHead += "(Self_,"+ fun_arg.elementAt(0).evaluate()+ ",Now_)";
 		String result = auxHead + " :- node(Self_),time(Now_)";
-		result += body.toString(1)+","+ body.elementAt(body.size()-1).simpleEvaluate() +".\n";
+		result += body.toString(1)+","+ body.elementAt(body.size()-1).simpleEvaluate()+".";
 		result += head.getName().evaluate();
 		result += "(Self_," + this.evaluate() + ",Now_)";
 		result += " :- node(Self_),time(Now_),"+this.evaluate()+ " := #"; 

@@ -1,6 +1,7 @@
 package main;
 
 import java.io.*;
+import java.util.StringTokenizer;
 
 import parser.Parser;
 import rules.Rule;
@@ -16,8 +17,12 @@ public class Application {
 		try{
 			Rule rule;
 			while((rule =parser.rule())!=null){
-				out.write(rule.evaluate()+"\n\n");
-				out.flush();
+				StringTokenizer tokens = new StringTokenizer(rule.evaluate(),".");
+				while(tokens.hasMoreTokens()){
+					String tmp = tokens.nextToken();
+					out.write(tmp+".\n\n");
+					out.flush();
+				}
 			}
 		}catch(Exception e){
 			System.out.println(e.getMessage());
