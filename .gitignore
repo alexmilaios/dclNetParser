@@ -2,3 +2,6 @@ output.txt
 rules.txt
 test.txt
 /bin
+/addTest.txt
+/forgetTest.txt
+/sendTest.txt
