@@ -19,8 +19,10 @@ public class AgrFunction extends Function {
 		result += head.getName().evaluate();
 		result += "(Self_," + this.evaluate() + ",Now_)";
 		result += " :- node(Self_),time(Now_),"+this.evaluate()+ " := #"; 
-		result += this.getToken().toString()+" { ";
-		result += auxHead + " }.";
+		result += this.getToken().toString();
+		result += (this.getToken().toString().equals("count")) ? " { " : " [ ";
+		result += auxHead;
+		result += (this.getToken().toString().equals("count")) ? " }." : " ].";
 		return result;
 	}
 	
