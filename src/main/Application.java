@@ -10,6 +10,7 @@ public class Application {
 	/**
 	 * @param args
 	 */
+	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Parser parser = new Parser(new FileInputStream(new File(args[0])));

@@ -20,7 +20,7 @@ public class TransientRule extends Rule{
 				output = "Error one argument at the body. The type of the variable should be given";
 		else{
 			for(int i = 0; i < aux.size(); i++) { 
-				output += aux.elementAt(i).evaluate()+"\n";
+				output += aux.elementAt(i).evaluate();
 			}
 			output += head.evaluate(false,true);
 			output += " :- node(Self_),time(Now_)";

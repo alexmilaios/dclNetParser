@@ -14,7 +14,7 @@ public class AddRule extends Rule{
 		String output = "";
 		
 		for(int i = 0; i < aux.size(); i++) { 
-			output += aux.elementAt(i).evaluate()+"\n";
+			output += aux.elementAt(i).evaluate();
 		}
 		
 		output += head.evaluate(true,true);
