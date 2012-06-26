@@ -42,6 +42,7 @@ TOKEN :
 | < NOT : "not" >
 | < IF : "if" >
 | < SEND : "send" >
+| < CURRENT_HOST : "current_host">
 | < CONSTANT : (["a"-"z"]|"_")+ >
 | < VARIABLE : ["A"-"Z"] (["a"-"z"] | ["A"-"Z"] | <DIGIT> |"_")*>
 | < NUM : (<DIGIT>)+>
@@ -243,6 +244,7 @@ Literal literal() :
 {
   Predicate predicate;
   Expresion exp;
+  Current_host host;
 }
 {
   	LOOKAHEAD(2)
@@ -255,6 +257,20 @@ Literal literal() :
 |	exp = expresion()
 	{		return exp;
     }
+|	host = current_host()	
+	{		return host;
+	}
+}
+
+Current_host current_host() : 
+{
+  Token token;
+  Variable var;
+}
+{	<CURRENT_HOST> "("  token = <VARIABLE> ")"
+	{
+	  return new Current_host(new Variable(token)); 	}
+	
 }
 
 Expresion expresion() :

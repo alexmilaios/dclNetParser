@@ -112,4 +112,16 @@ public class Literal_list {
 			this.list.remove(index);
 		}
 	}
+	
+	public int curent_host(){
+		for(int i = 0; i < this.size(); i++){
+			if(this.elementAt(i) instanceof Current_host)
+				return i;
+		}
+		return -1;
+	}
+	
+	public void removeAt(int i){
+		list.remove(i);
+	}
 }

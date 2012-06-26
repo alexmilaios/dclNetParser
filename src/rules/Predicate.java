@@ -56,6 +56,20 @@ public abstract class Predicate {
 		return false;
 	}
 	
+	public int containsVarIndex (Variable var){
+		for(int i = 0; i < terms.size(); i++){
+			if(terms.elementAt(i).evaluate().equals(var.evaluate())){
+				return i;
+			}
+		}
+		// never be here
+		return -1;
+	}
+	public void changeVariable(Variable var, int index){
+		terms = terms.removeVal(var);
+		terms.addElementAt(new Variable("Self_"), index);
+	}
+	
 	abstract public String simpleEvaluate();
 	
 	abstract public String evaluate(boolean timeplus,boolean head);

@@ -61,4 +61,8 @@ public class Term_List {
 			}
 		}
 	}
+	
+	public void addElementAt(Term item,int index){
+		list.add(index, item);
+	}
 }

@@ -39,6 +39,12 @@ public class TransientRuleTest {
 		result = rule.evaluate();
 		assertEquals(actual, result);
 		
+		
+		actual = "latest_colour(Self_,Self_,C,Now_) :- node(Self_),time(Now_),my_colour(Self_,C,Now_).";
+		rule = (TransientRule) myParser.rule();
+		result = rule.evaluate();
+		assertEquals(actual, result);
+		
 		actual = "latest_colour(Self_,X,C,Now_) :- node(Self_),time(Now_),receive_vote_colour(Self_,C,X,_,Now_).";
 		rule = (TransientRule) myParser.rule();
 		result = rule.evaluate();
