@@ -21,14 +21,16 @@ public abstract class Predicate {
 		return terms;
 	}
 	
-	public boolean testforAgrFunction(){
-		if(terms.elementAt(0) instanceof AgrFunction)
-			return true;
-		else
-			return false;
+	public int testforAgrFunction(){
+		for(int i = 0; i < terms.size(); i++){
+			if( terms.elementAt(i) instanceof AgrFunction)
+				return i;
+		}
+		return -1;
 	}
-	public AgrFunction getArgFunction(){
-		return (AgrFunction) terms.elementAt(0);
+	
+	public AgrFunction getArgFunction(int index){
+		return (AgrFunction) terms.elementAt(index);
 	}
 	
 	public Vector<Variable> getVariables(){

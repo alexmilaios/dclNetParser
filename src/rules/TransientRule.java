@@ -13,9 +13,9 @@ public class TransientRule extends Rule{
 	public String evaluate() {
 		Vector<TransientRule> aux = this.checkValidity();
 		String output = "";
-		if(head.testforAgrFunction())
+		if(head.testforAgrFunction() != -1)
 			if(body.size()>1)
-				output = head.getArgFunction().forAgrFunction(head,body);
+				output = head.getArgFunction(head.testforAgrFunction()).forAgrFunction(head,body);
 			else
 				output = "Error one argument at the body. The type of the variable should be given";
 		else{
