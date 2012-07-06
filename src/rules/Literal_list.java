@@ -124,4 +124,23 @@ public class Literal_list {
 	public void removeAt(int i){
 		list.remove(i);
 	}
+	
+	public Literal_list getLiteralsWithVariable(Variable variable) {
+		Literal_list newList = new Literal_list();
+		for(int i = 0; i < this.size(); i++) {
+			if(this.elementAt(i) instanceof SimpleLiteral){
+				SimpleLiteral tmp = (SimpleLiteral) this.elementAt(i);
+				if(tmp.predicate.containsVar(variable)){
+					newList.addElement(tmp);
+				}
+			}
+			else if(this.elementAt(i) instanceof NegativeLiteral){
+				NegativeLiteral tmp = (NegativeLiteral) this.elementAt(i);
+				if(tmp.predicate.containsVar(variable)){
+					newList.addElement(tmp);
+				}
+			}
+		}
+		return newList;
+	}
 }

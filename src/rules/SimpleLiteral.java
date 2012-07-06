@@ -4,7 +4,7 @@ import java.util.Vector;
 
 public class SimpleLiteral extends Literal {
 
-	protected Predicate predicate;
+	public Predicate predicate;
 	
 	public SimpleLiteral(Predicate predicate) {
 		this.predicate = predicate;

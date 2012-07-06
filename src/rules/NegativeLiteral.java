@@ -4,7 +4,7 @@ import java.util.Vector;
 
 public class NegativeLiteral extends Literal {
 
-	Predicate predicate;
+	public Predicate predicate;
 	
 	public NegativeLiteral(Predicate predicate) {
 		this.predicate = predicate;  

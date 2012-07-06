@@ -20,6 +20,10 @@ public class Function extends Term {
 		return arguments;
 	}
 	
+	public Variable getVariable() {
+		return (Variable) arguments.elementAt(0);
+	}
+	
 	@Override
 	public String evaluate(){
 		return null;
