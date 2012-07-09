@@ -62,6 +62,13 @@ public class Term_List {
 		}
 	}
 	
+	public void addList(Term_List add_list) { 
+		for(int i =0; i < add_list.size(); i++) {
+			this.list.add(add_list.elementAt(i));
+		}
+		removeDublicates();
+	}
+	
 	public void addElementAt(Term item,int index){
 		list.add(index, item);
 	}
