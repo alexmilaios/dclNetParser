@@ -25,7 +25,7 @@ public class SendRule extends Rule {
 			output += aux.elementAt(i).evaluate();
 		}
 		output += head.evaluate(true,true);
-		output += " :- node(Self_),time(Now_)";
+		output += " :- \n\t\tnode(Self_),\n\t\ttime(Now_)";
 		output += body.toString();
 		output += ".";
 		return output;

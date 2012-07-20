@@ -27,12 +27,13 @@ SKIP :
 
 TOKEN :
 {
-  < EQUAL : "=">
+  < EQUAL : "==">
 | < NEQUAL : "!=" >
 | < LESS : "<" >
 | < LESSEQUAL : "<=" >
 | < GREATER : ">" >
 | < GREATEREQUAL : ">=" >
+| < ASSIGNMENT : ":=" >
 }
 
 TOKEN :
@@ -43,8 +44,9 @@ TOKEN :
 | < IF : "if" >
 | < SEND : "send" >
 | < CURRENT_HOST : "current_host">
+| < SELF : "self" >
 | < CONSTANT : (["a"-"z"]|"_")+ >
-| < VARIABLE : ["A"-"Z"] (["a"-"z"] | ["A"-"Z"] | <DIGIT> |"_")*>
+| < VARIABLE : (["A"-"Z"] |"_") (["a"-"z"] | ["A"-"Z"] | <DIGIT> |"_")*>
 | < NUM : (<DIGIT>)+>
 | < #DIGIT : [ "0"-"9" ] >
 }
@@ -181,7 +183,7 @@ Term_List argument_list_tail() :
 
 Term Term() :
 {
-  Token output;
+  Token output, left, right, oper;
   Term term;
 }
 {
@@ -189,17 +191,31 @@ Term Term() :
   	    output = <NUM>
   	    {
   	      return new Num(output);  	    }
+  	|  <SELF>
+  	{		return new Variable("Self_");
+ 	}
+  	|	LOOKAHEAD(2) left = <VARIABLE> oper = operator() right = <VARIABLE>
+		{
+		  return new ArithmeticTerm(left,oper,right);
+		} 
   	|	LOOKAHEAD(2)
   		 term = identifier()
   		 {
   		   return term;  		 }
-  	| 	function()
+  	| LOOKAHEAD(2)	function()
   	|
 		{			Function fun;
 		}
   		"#" fun = function()
   		{
   	  		return new AgrFunction(fun.getToken(),fun.getTerm_List());  		}
+ 	|LOOKAHEAD(2)
+ 		{
+ 		  Function internalFun;
+ 		}
+ 		"@" internalFun = function()
+ 		{
+ 		  return new InternalFunction(internalFun.getToken(),internalFun.getTerm_List()); 		}
 	)
 }
 
@@ -281,24 +297,78 @@ Expresion expresion() :
 {
 	left = operand()
 	operator = operator()
-	right = operand()
+	right = right_operand()
 	{
 	  return new Expresion(left,operator,right);	}
 }
 
 Term operand() :
 {
-  Token output;
+  Token output, operator, left, right;
   Term iden;
+  Function fun;
+  Arithmetic exp;
 }
 {
-  output = <NUM>
+
+ "@"  fun = function()
+ {
+	return new InternalFunctionWrapper(new InternalFunction(fun.getToken(),fun.getTerm_List()));
+ }
+ |  < SELF>
+   {
+     return new Variable("Self_");
+   }
+| output = <NUM>
   {
    return new Num(output);
   }
 | iden = identifier()
  {
-   return iden; }
+   return iden;
+ }
+
+}
+
+Term right_operand() :{
+  Token output, operator, right;
+  Term iden;
+  Function fun;
+  Arithmetic exp;
+}
+{
+
+ "@"  fun = function()
+ {
+	return new InternalFunctionWrapper(new InternalFunction(fun.getToken(),fun.getTerm_List()));
+ }
+|  < SELF >
+   {
+     return new Variable("Self_");
+   }
+|  iden = identifier() exp = arithmetic()
+ {
+   	if(exp == null){		return iden;
+   	}else
+		return new Arithmetic(((Identifier) iden).token, exp.operator, exp.rightPart);
+ }
+|  output = <NUM>
+  {
+   return new Num(output);
+  }
+}
+
+Arithmetic arithmetic() :
+{	Token left, operator, right;
+}
+{
+ 	( 	  operator = operator() right = < VARIABLE > 
+	{
+	  return new Arithmetic(operator, right);
+	}
+	)?
+	{
+	  return null;	}
 }
 
 Token operator() :
@@ -313,8 +383,23 @@ Token operator() :
  {
    return output;
  }
-| LOOKAHEAD(2)
-  output = < LESS >
+| output = "+"
+ {
+   return output;
+ }
+| output = "-"
+ {
+   return output;
+ }
+| output = "*"
+ {
+   return output;
+ }
+| output = "/"
+ {
+   return output;
+ }
+|  LOOKAHEAD(2) output = < LESS >
   {
    return output;
   }
@@ -329,6 +414,8 @@ Token operator() :
 | output = < GREATEREQUAL >
  {
    return output; }
+| output = < ASSIGNMENT > {	return output;
+ }
 }
 
 Identifier identifier() :

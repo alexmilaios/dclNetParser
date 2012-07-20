@@ -29,7 +29,7 @@ public class Literal_list {
 	public String toString(){
 		String result="";
 		for(int i=0;i<list.size();i++){
-			result += ","+ list.elementAt(list.size()-i-1).evalute();
+			result += ",\n\t\t"+ list.elementAt(list.size()-i-1).evalute();
 		}
 		return result;
 	}

@@ -31,7 +31,7 @@ public class TransientRule extends Rule{
 			}
 */			
 			output += head.evaluate(false,true);
-			output += " :- node(Self_),time(Now_)";
+			output += " :- \n\t\tnode(Self_),\n\t\ttime(Now_)";
 			output += body.toString();
 			output += ".";
 		}
