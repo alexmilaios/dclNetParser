@@ -40,6 +40,15 @@ public class Term_List {
 		return list;
 	}
 	
+	public void removeVal2(Variable var){
+		
+		for(int i=0;i < this.size(); i++){
+			if(this.elementAt(i).evaluate().equals(var.evaluate())){
+				list.remove(i);
+			}
+		}
+	}
+	
 	private Vector<Term> getList(){
 		return this.list;
 	}

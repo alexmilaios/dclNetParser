@@ -12,6 +12,9 @@ public class SimplePredicate extends Predicate {
 
 	@Override
 	public String evaluate(boolean timeplus,boolean head) {
+		if(name.evaluate().equals("node"))
+			return simpleEvaluate();
+		
 		String result="";
 		result += this.name.evaluate();
 		result += "(Self_,";

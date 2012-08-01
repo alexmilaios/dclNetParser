@@ -24,7 +24,7 @@ public class AgrFunction extends Function {
 		Literal_list aux_body = body.getLiteralsWithVariable(this.getVariable());
 		Literal_list literals_without = body.getLiteralsWithoutVariable(this.getVariable());
 		
-		aux_body.removeAt(aux_body.size()-1);
+		//aux_body.removeAt(aux_body.size()-1);
 		if(aux_body.size() > 1) {
 			TransientRule aux_rule = new TransientRule(aux_head, aux_body);
 			String result = aux_rule.evaluate();
@@ -111,7 +111,6 @@ public class AgrFunction extends Function {
 	
 	@Override
 	public String evaluate() {
-		// TODO Auto-generated method stub
 		String val = name.toString();
 		String newVal = Character.toUpperCase(val.charAt(0))+val.substring(1);
 		String arg = arguments.toString();

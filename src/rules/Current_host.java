@@ -24,5 +24,10 @@ public class Current_host extends Literal {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public boolean equals(Object object) {
+		Literal literal = (Literal) object;
+		return (this.evalute().equals(literal.evalute()));
+	}
 
 }

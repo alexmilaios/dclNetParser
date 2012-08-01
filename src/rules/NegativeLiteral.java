@@ -4,8 +4,6 @@ import java.util.Vector;
 
 public class NegativeLiteral extends Literal {
 
-	public Predicate predicate;
-	
 	public NegativeLiteral(Predicate predicate) {
 		this.predicate = predicate;  
 	}
@@ -34,4 +32,18 @@ public class NegativeLiteral extends Literal {
 		return predicate.containsVar(var);
 	}
 	
+	public boolean equals(Object object) {
+		Literal literal = (Literal) object;
+		return (this.evalute().equals(literal.evalute()));
+	}
+	
+	public boolean containsVariavles(Term_List list) {
+
+		for(int i = 0; i < list.size(); i++){
+			if((list.elementAt(i) instanceof Variable) && predicate.containsVar((Variable)list.elementAt(i))){
+				return true;
+			}
+		}
+		return false;
+	}
 }

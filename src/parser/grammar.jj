@@ -45,7 +45,7 @@ TOKEN :
 | < SEND : "send" >
 | < CURRENT_HOST : "current_host">
 | < SELF : "self" >
-| < CONSTANT : (["a"-"z"]|"_")+ >
+| < CONSTANT : (["a"-"z"]) (["a"-"z"] | ["A"-"Z"] | <DIGIT> |"_")* >
 | < VARIABLE : (["A"-"Z"] |"_") (["a"-"z"] | ["A"-"Z"] | <DIGIT> |"_")*>
 | < NUM : (<DIGIT>)+>
 | < #DIGIT : [ "0"-"9" ] >
@@ -208,7 +208,7 @@ Term Term() :
 		}
   		"#" fun = function()
   		{
-  	  		return new AgrFunction(fun.getToken(),fun.getTerm_List());  		}
+  	  		return new AgrFunction2(fun.getToken(),fun.getTerm_List());  		}
  	|LOOKAHEAD(2)
  		{
  		  Function internalFun;
@@ -263,8 +263,7 @@ Literal literal() :
   Current_host host;
 }
 {
-  	LOOKAHEAD(2)
-	predicate = predicate()
+  	LOOKAHEAD(2)predicate = predicate()
 	{
 	  return new SimpleLiteral(predicate);	}
 | 	<NOT> predicate = predicate()

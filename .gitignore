@@ -9,3 +9,6 @@ test.txt
 /lsp_out.lp
 /lsp.txt
 /high_lsp.lp
+/high_bgp-dispute-wheel.lp
+/bgp-dispute-wheel_out.lp
+/parsing_files

@@ -11,6 +11,10 @@ public class Literal_list {
 		list = new Vector<Literal>();
 	}
 	
+	public boolean contains(Literal literal) {
+		return list.contains(literal);
+	}
+	
 	public void addElement(Literal item, int index){
 		list.add(index, item);
 	}
@@ -125,6 +129,10 @@ public class Literal_list {
 		list.remove(i);
 	}
 	
+	public void concatenate(Literal_list second) {
+		list.addAll(list.size(), second.list);
+	}
+	
 	public Literal_list getLiteralsWithVariable(Variable variable) {
 		Literal_list newList = new Literal_list();
 		for(int i = 0; i < this.size(); i++) {
@@ -144,6 +152,27 @@ public class Literal_list {
 		return newList;
 	}
 	
+	public Literal_list getLiteralsWithVariable(Term_List arguments) {
+		Literal_list newList = new Literal_list();
+		for(int k = 0; k <  arguments.size(); k++) {
+			for(int i = 0; i < this.size(); i++) {
+				if(this.elementAt(i) instanceof SimpleLiteral){
+					SimpleLiteral tmp = (SimpleLiteral) this.elementAt(i);
+					if(tmp.predicate.containsVar((Variable) arguments.elementAt(k)) &&  !newList.contains(tmp)){
+						newList.addElement(tmp);
+					}
+				}
+				else if(this.elementAt(i) instanceof NegativeLiteral){
+					NegativeLiteral tmp = (NegativeLiteral) this.elementAt(i);
+					if(tmp.predicate.containsVar((Variable) arguments.elementAt(k)) &&  !newList.contains(tmp)){
+						newList.addElement(tmp);
+					}
+				}
+			}
+		}
+		return newList;
+	}
+	
 	public Literal_list getLiteralsWithoutVariable(Variable variable) {
 		Literal_list newList = new Literal_list();
 		for(int i = 0; i < this.size(); i++) {
@@ -157,6 +186,27 @@ public class Literal_list {
 				NegativeLiteral tmp = (NegativeLiteral) this.elementAt(i);
 				if(!tmp.predicate.containsVar(variable)){
 					newList.addElement(tmp);
+				}
+			}
+		}
+		return newList;
+	}
+	
+	public Literal_list getLiteralsWithoutVariable(Term_List arguments) {
+		Literal_list newList = new Literal_list();
+		for(int k = 0; k < arguments.size(); k++) {
+			for(int i = 0; i < this.size(); i++) {
+				if(this.elementAt(i) instanceof SimpleLiteral){
+					SimpleLiteral tmp = (SimpleLiteral) this.elementAt(i);
+					if(!tmp.containsVariavles(arguments) && !newList.contains(tmp)){
+						newList.addElement(tmp);
+					}
+				}
+				else if(this.elementAt(i) instanceof NegativeLiteral){
+					NegativeLiteral tmp = (NegativeLiteral) this.elementAt(i);
+					if(!tmp.containsVariavles(arguments) && !newList.contains(tmp)){
+						newList.addElement(tmp);
+					}
 				}
 			}
 		}
