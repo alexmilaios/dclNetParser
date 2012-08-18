@@ -81,4 +81,13 @@ public class Term_List {
 	public void addElementAt(Term item,int index){
 		list.add(index, item);
 	}
+	
+	public void reverse() {
+		Term tmp;
+		for(int i = 0; i < list.size()/2; i++){
+			tmp = list.elementAt(i);
+			list.set(i, list.elementAt(list.size() - i-1));
+			list.set(list.size() - i-1, tmp);
+		}
+	}
 }

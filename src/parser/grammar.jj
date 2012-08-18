@@ -19,7 +19,8 @@ PARSER_END(Parser)
 
 SKIP :
 {
-  < "--" (["a" - "z"])* ("\n" | "\r" | "\r\n")>
+  < "%" (["a" - "z"] | ["A" - "z"] | ["0" - "9"]
+  	| "-"  | " " | ":" | "/" | ".")* ("\n" | "\r" | "\r\n")>
 | " "
 | "\t"
 | "\n"
@@ -45,6 +46,8 @@ TOKEN :
 | < SEND : "send" >
 | < CURRENT_HOST : "current_host">
 | < SELF : "self" >
+| < TRANSPORT : "transport">
+| < PERSISTENT : "persistent">
 | < CONSTANT : (["a"-"z"]) (["a"-"z"] | ["A"-"Z"] | <DIGIT> |"_")* >
 | < VARIABLE : (["A"-"Z"] |"_") (["a"-"z"] | ["A"-"Z"] | <DIGIT> |"_")*>
 | < NUM : (<DIGIT>)+>
@@ -56,24 +59,50 @@ Rule rule() :
 {
 	rule = add__tran_rule() "."
 	{
-		//rule.evaluate();
 		return rule;
 	}
 | 	rule = del_rule() "."
-	{
-		//rule.evaluate();
+	{	
 		return rule;
 	}
 | 	rule = send_rule() "."
 	{
-		//rule.evaluate();
 		return rule;
+	}	 	
+|  rule = persistent() "."
+	{  		return rule;
 	}
-	 	
+|  rule = transport() "."
+	{
+  		return rule;
+	}	
 | <EOF>
 	{
 		return null;	
 	}
+}
+
+Rule transport() :
+{
+	Predicate head;  
+}
+{
+	< TRANSPORT >
+	
+	head = predicate()
+	{
+	  return new Transport(head,null);
+	}
+}
+
+Rule persistent() :
+{	Predicate head;  
+}
+{	< PERSISTENT >
+	
+	head = predicate()
+	{
+	  return new Persistent(head,null);	}
 }
 
 Rule add__tran_rule() :
@@ -194,7 +223,12 @@ Term Term() :
   	|  <SELF>
   	{		return new Variable("Self_");
  	}
-  	|	LOOKAHEAD(2) left = <VARIABLE> oper = operator() right = <VARIABLE>
+  	|	LOOKAHEAD(3) left = <VARIABLE> oper = operator() right = <VARIABLE>
+		{
+		  return new ArithmeticTerm(left,oper,right);
+		}
+
+	|	LOOKAHEAD(3) left = <VARIABLE> oper = operator() right = <NUM>
 		{
 		  return new ArithmeticTerm(left,oper,right);
 		} 

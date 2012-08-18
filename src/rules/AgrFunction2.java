@@ -33,25 +33,26 @@ public class AgrFunction2 extends Function {
 		
 		Term_List newHeadTerms = head.terms;
 		newHeadTerms.addElementAt(new Variable("ArgRes"),newHeadTerms.size());
+		newHeadTerms.reverse();
 		SimplePredicate newHead = new SimplePredicate(head.name,newHeadTerms);
 
 		Literal_list initBody = modifiyVariable((aux_rule == null) ? list_with_vars : aux_list);
-		list_without_vars.concatenate(initBody);
+		initBody.concatenate(list_without_vars);
 		
 		if(rule instanceof SendRule) {
-			result += "send ";
+			result += "send_";
 		}
 		
 		if(rule instanceof DeleteRule) {
-			result += "forget ";
+			result += "forget_";
 		}
 		
 		result += (rule instanceof AddRule || rule instanceof SendRule) ? 
 				newHead.evaluate(true, true) : 
 				newHead.evaluate(false, false);
 
-		result += " :- \n\t\tnode(Self_),\n\t\ttime(Now_)"+ list_without_vars.toString();
-		result += "\n\t\tArgRes := #" + name.toString() +
+		result += " :- \n\t\tnode(Self_),\n\t\ttime(Now_)"+ initBody.toString();
+		result += ",\n\t\tArgRes := #" + name.toString() +
 				((name.toString().equals("count")) ? " {\n\t\t\t" : " [\n\t\t\t");
 
 		list_with_vars = unModifiyVariable(list_with_vars);
@@ -63,7 +64,8 @@ public class AgrFunction2 extends Function {
 		for(int i=0; i < arguments.size() ;i++) {
 			result += "\n\t\t\t: " + body.elementAt(i + body.size()-arguments.size()).evalute();
 		}
-		result +=  (name.toString().equals("count")) ? "\n\t\t}." : "\n\t\t\t= Var\n\t\t].";
+		result +=  (name.toString().equals("count")) ? "\n\t\t}." 
+				: "\n\t\t\t= " +arguments.elementAt(0).evaluate() +"\n\t\t].";
 		return result;
 
 	}
