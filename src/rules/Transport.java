@@ -42,11 +42,18 @@ public class Transport extends Rule {
 		return output;
 	}
 	
+	private String compressReceive() {
+		String output = "";
+		output += "receive_" + head.name.evaluate() + "(Self_," + head.terms.toString() + "X,Now_) :-";
+		output += "\n\t\treceive_" + head.name.evaluate() + "(Self_," + head.terms.toString() + "X,_,Now_).";
+		return output;
+	}
+	
 	@Override
 	public String evaluate() {
 		String output;
 		
-		output = sendReceiveBind() + communication() + messageSent() + messageReceived(); 
+		output = sendReceiveBind() + communication() + messageSent() + messageReceived() + compressReceive(); 
 		return output;
 	}
 

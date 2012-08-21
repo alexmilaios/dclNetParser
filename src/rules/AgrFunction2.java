@@ -21,7 +21,8 @@ public class AgrFunction2 extends Function {
 		Literal_list list_with_vars = body_without_domains.getLiteralsWithVariable(arguments);
 		Literal_list list_without_vars = body_without_domains.getLiteralsWithoutVariable(arguments);
 		
-		TransientRule aux_rule = auxTransientRule(list_with_vars, head);
+		TransientRule aux_rule =  auxTransientRule(list_with_vars, head);
+		
 		Literal_list aux_list = null;
 		String result = "";
 		
@@ -36,8 +37,9 @@ public class AgrFunction2 extends Function {
 		newHeadTerms.reverse();
 		SimplePredicate newHead = new SimplePredicate(head.name,newHeadTerms);
 
-		Literal_list initBody = modifiyVariable((aux_rule == null) ? list_with_vars : aux_list);
-		initBody.concatenate(list_without_vars);
+		Literal_list initBody = ( arguments.size() ==1 ) ? null : modifiyVariable((aux_rule == null) ? list_with_vars : aux_list);
+		if(initBody != null)
+			initBody.concatenate(list_without_vars);
 		
 		if(rule instanceof SendRule) {
 			result += "send_";
@@ -51,11 +53,12 @@ public class AgrFunction2 extends Function {
 				newHead.evaluate(true, true) : 
 				newHead.evaluate(false, false);
 
-		result += " :- \n\t\tnode(Self_),\n\t\ttime(Now_)"+ initBody.toString();
+		result += " :- \n\t\tnode(Self_),\n\t\ttime(Now_)"+ ((initBody != null) ? initBody.toString() : "");
 		result += ",\n\t\tArgRes := #" + name.toString() +
 				((name.toString().equals("count")) ? " {\n\t\t\t" : " [\n\t\t\t");
 
-		list_with_vars = unModifiyVariable(list_with_vars);
+		if(initBody != null)
+			list_with_vars = unModifiyVariable(list_with_vars);
 
 		result += (aux_rule == null) ? 
 					list_with_vars.elementAt(0).evalute() 

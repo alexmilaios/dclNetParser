@@ -23,8 +23,8 @@ public class TransportPredicate extends Predicate {
 		result += "(Self_,";
 		result += this.terms.toString();
 		result += src_dest.evaluate();
-		result += (!head) ? ",_," : ",";
-		result += (timeplus == true) ? "Now_+1)": "Now_)";
+		//result += (!head) ? ",_," : ",";
+		result += (timeplus == true) ? ",Now_+1)": ",Now_)";
 		return result;
 	}
 

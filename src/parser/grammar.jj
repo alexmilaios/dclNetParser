@@ -20,7 +20,7 @@ PARSER_END(Parser)
 SKIP :
 {
   < "%" (["a" - "z"] | ["A" - "z"] | ["0" - "9"]
-  	| "-"  | " " | ":" | "/" | ".")* ("\n" | "\r" | "\r\n")>
+  	| "-"  | " " | ":" | "/" | "." | "\\")* ("\n" | "\r" | "\r\n")>
 | " "
 | "\t"
 | "\n"
@@ -48,6 +48,7 @@ TOKEN :
 | < SELF : "self" >
 | < TRANSPORT : "transport">
 | < PERSISTENT : "persistent">
+| < INPUT : "input" >
 | < CONSTANT : (["a"-"z"]) (["a"-"z"] | ["A"-"Z"] | <DIGIT> |"_")* >
 | < VARIABLE : (["A"-"Z"] |"_") (["a"-"z"] | ["A"-"Z"] | <DIGIT> |"_")*>
 | < NUM : (<DIGIT>)+>
@@ -75,10 +76,26 @@ Rule rule() :
 |  rule = transport() "."
 	{
   		return rule;
-	}	
+	}
+| rule = input() "."
+	{
+	  return rule;	}
 | <EOF>
 	{
 		return null;	
+	}
+}
+
+Rule input() :
+{
+	Predicate head;  
+}
+{
+	< INPUT >
+	
+	head = predicate()
+	{
+	  return new Input(head,null);
 	}
 }
 

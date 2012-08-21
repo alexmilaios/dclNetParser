@@ -5,8 +5,8 @@ import java.util.Vector;
 
 public abstract class Predicate {
 
-	protected Constant name;
-	protected Term_List terms;
+	public Constant name;
+	public Term_List terms;
 	
 	public Predicate(Constant name,Term_List terms) {
 		this.name = name;

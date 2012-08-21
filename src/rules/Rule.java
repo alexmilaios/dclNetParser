@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public abstract class Rule {
 
-	protected Predicate head; 
+	public Predicate head; 
 	protected Literal_list body;
 	protected Vector<Variable> bodyPosVariables ;
 	protected Vector<Variable> bodyNegVariables ;
