@@ -15,6 +15,9 @@ public class Variable extends Identifier {
 		this.var = var;
 	}
 	
+	public boolean equals(Object obj) {
+		return this.evaluate().equals(((Variable) obj).evaluate());
+	}
 	
 	@Override
 	public String evaluate() {

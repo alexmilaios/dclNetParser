@@ -40,13 +40,15 @@ public class Term_List {
 		return list;
 	}
 	
-	public void removeVal2(Variable var){
-		
+	public boolean removeVal2(Variable var){
+		boolean result=false;
 		for(int i=0;i < this.size(); i++){
 			if(this.elementAt(i).evaluate().equals(var.evaluate())){
 				list.remove(i);
+				result = true;
 			}
 		}
+		return result;
 	}
 	
 	private Vector<Term> getList(){
@@ -89,5 +91,13 @@ public class Term_List {
 			list.set(i, list.elementAt(list.size() - i-1));
 			list.set(list.size() - i-1, tmp);
 		}
+	}
+	
+	public boolean contains(Variable var){
+		for(int i=0; i < this.size(); i++){
+			if(elementAt(i) instanceof Variable && elementAt(i).equals(var))
+				return true;
+		}
+		return false;
 	}
 }
