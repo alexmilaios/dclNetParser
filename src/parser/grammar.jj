@@ -58,6 +58,7 @@ TOKEN :
 Rule rule() :
 {Rule rule;}
 {
+	LOOKAHEAD(2)
 	rule = add__tran_rule() "."
 	{
 		return rule;
@@ -80,10 +81,21 @@ Rule rule() :
 | rule = input() "."
 	{
 	  return rule;	}
+| rule = constantRule() "." 
+	{		return rule;  	
+	}
 | <EOF>
 	{
 		return null;	
 	}
+}
+
+Rule constantRule() :
+{
+ 	Token  cons;}
+{	cons = <CONSTANT>
+	{
+	  return new ConstantRule(null,null,cons);	}
 }
 
 Rule input() :
