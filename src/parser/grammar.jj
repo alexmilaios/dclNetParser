@@ -63,6 +63,10 @@ Rule rule() :
 	{
 		return rule;
 	}
+|	rule = constantRule() "." 
+	{
+		return rule;  	
+	}
 | 	rule = del_rule() "."
 	{	
 		return rule;
@@ -81,9 +85,6 @@ Rule rule() :
 | rule = input() "."
 	{
 	  return rule;	}
-| rule = constantRule() "." 
-	{		return rule;  	
-	}
 | <EOF>
 	{
 		return null;	
