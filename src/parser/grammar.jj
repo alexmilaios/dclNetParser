@@ -55,6 +55,14 @@ TOKEN :
 | < #DIGIT : [ "0"-"9" ] >
 }
 
+TOKEN :
+{
+	< COMMENT: ("%*") (<CONSTANT> | <VARIABLE>
+	| <NUM> |< EQUAL> | < NEQUAL>| <LESS> | < LESSEQUAL >| < GREATER >
+	| < GREATEREQUAL> | < ASSIGNMENT> | "(" | ")" | "\n" | "\r" | "\r\n" | "\t"
+	| ","| " " |":"|"-"|"#" | "["  |"{" | "}" | "=" |"]."| "@"| ").")* ("*%")>
+}
+
 Rule rule() :
 {Rule rule;}
 {
@@ -85,10 +93,21 @@ Rule rule() :
 | rule = input() "."
 	{
 	  return rule;	}
+|  rule = commented() 
+	{		return rule;
+	} 
 | <EOF>
 	{
 		return null;	
 	}
+}
+
+Rule commented() :
+{
+  Token commentedPart;}
+{	 commentedPart = <COMMENT> 
+	{
+	  return new CommentedRule(null,null,commentedPart);	}
 }
 
 Rule constantRule() :
